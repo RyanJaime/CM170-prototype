@@ -78,7 +78,6 @@ public class HealthBar : MonoBehaviour
 
     private void TakeDamage()
     {
-		if (!ShieldPlayer.active) {
 			this.GetComponent<EmitterHit> ().toggleHit ();
 			float cutFreqAt = lpf.cutoffFrequency / 1.5f;
 			lpf.cutoffFrequency = cutFreqAt;
@@ -92,7 +91,6 @@ public class HealthBar : MonoBehaviour
 				theGameManager.RestartGame();
 			}
 			UpdateHealthbar();
-		}
 
     }
 
