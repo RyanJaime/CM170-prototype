@@ -67,7 +67,7 @@ public class AudioPeer : MonoBehaviour {
 	public void playAudio() {
 		if (_audioSource != null) {
 			_audioSource.Play ();
-			StartCoroutine (masterGenerator.GetComponent<masterFreqGenerator> ().waveSpawner());
+			//StartCoroutine (masterGenerator.GetComponent<masterFreqGenerator> ().waveSpawner());
 		}
 	}
 
