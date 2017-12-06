@@ -13,7 +13,7 @@ public class movement : MonoBehaviour {
 	float diff = 0.0f;
 	void Start () {
 		hit = new RaycastHit ();
-		mx = 3;
+		mx = 1;
 	}
 
 	// Update is called once per frame
@@ -28,8 +28,22 @@ public class movement : MonoBehaviour {
 				transform.position = new Vector3 (transform.position.x - mx, transform.position.y, transform.position.z);
 			}
 		}
-
-		if (Physics.Raycast (transform.position, Vector3.down, out hit, 200f)) {
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            if (transform.position.z < mx)
+            {
+                transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + mx);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            if (transform.position.z > -mx)
+            {
+                transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - mx);
+            }
+        }
+        /* ROAD BUMPS
+        if (Physics.Raycast (transform.position, Vector3.down, out hit, 200f)) {
 			heightAboveRoad = hit.distance;
 			//Debug.Log ("Height above: " + heightAboveRoad);
 			if (heightAboveRoad != heightAbove) {
@@ -37,6 +51,7 @@ public class movement : MonoBehaviour {
 				transform.position = newPos;
 			}
 		}
+        */
 	}
 
 	void OnTriggerEnter(Collider collisionInfo){

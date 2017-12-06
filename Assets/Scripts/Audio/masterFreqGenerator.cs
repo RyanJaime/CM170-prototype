@@ -1,4 +1,4 @@
-﻿/*
+﻿
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -96,7 +96,7 @@ public class masterFreqGenerator : MonoBehaviour {
 			}
 
 			/*
-			 * while (!stop) {
+			   while (!stop) {
 				//right now its spawning after x amount of time
 
 				//fre
@@ -113,6 +113,7 @@ public class masterFreqGenerator : MonoBehaviour {
 					createSpawners.spawnerList[2].GetComponent<spawner>().execute ();
 				}
 			}
+            */
 			
 
 		}
@@ -120,4 +121,3 @@ public class masterFreqGenerator : MonoBehaviour {
 
 	}
 }
-*/

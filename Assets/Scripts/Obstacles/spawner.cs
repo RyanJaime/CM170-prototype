@@ -7,9 +7,10 @@ public class spawner : MonoBehaviour {
 	public GameObject obstacle;
 	public Vector3 spawnValues;
 
-	public int spawnPos;
+	public float spawnPosX;
+    public float spawnPosZ;
 
-	public bool stop;
+    public bool stop;
 
 	List<GameObject> obstacleArr = new List<GameObject>();
 	GameObject clone;
@@ -23,7 +24,7 @@ public class spawner : MonoBehaviour {
 	void Update () {
 
 		if (obstacleArr.Count > 0) {
-			if (obstacleArr [0].transform.position.z < -10) {
+			if (obstacleArr [0].transform.position.y > 20) {
 				GameObject toBeDestroyed = obstacleArr [0];
 				obstacleArr.Remove (toBeDestroyed);
 				Destroy (toBeDestroyed);
@@ -46,7 +47,7 @@ public class spawner : MonoBehaviour {
     
 	public void createObstacle() {
 		Vector3 spawnPosition = new Vector3 (0,0,0);
-		clone = Instantiate (obstacle, spawnPosition = transform.TransformPoint (spawnPos, 0, 0), gameObject.transform.rotation);
+		clone = Instantiate (obstacle, spawnPosition = transform.TransformPoint (spawnPosX, 0, spawnPosZ), gameObject.transform.rotation);
 		obstacleArr.Add (clone);
 	}
 }

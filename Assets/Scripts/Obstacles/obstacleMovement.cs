@@ -11,6 +11,6 @@ public class obstacleMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.position = new Vector3 (transform.position.x, transform.position.y, transform.position.z - 0.5f);
+		transform.position = new Vector3 (transform.position.x, transform.position.y + 0.5f, transform.position.z);
 	}
 }

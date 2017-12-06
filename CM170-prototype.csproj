@@ -85,7 +85,6 @@
     <Compile Include="Assets\Scripts\Audio\AudioPeer.cs" />
     <Compile Include="Assets\Scripts\Audio\masterFreqGenerator.cs" />
     <Compile Include="Assets\Scripts\Audio\Param.cs" />
-    <Compile Include="Assets\Scripts\ChargeBar.cs" />
     <Compile Include="Assets\Scripts\effectManager.cs" />
     <Compile Include="Assets\Scripts\ImageInfo.cs" />
     <Compile Include="Assets\Scripts\MIDIparse.cs" />
@@ -99,7 +98,6 @@
     <Compile Include="Assets\Scripts\SceneScripts\gameOverScreenUI.cs" />
     <Compile Include="Assets\Scripts\SceneScripts\gameWinScreenUI.cs" />
     <Compile Include="Assets\Scripts\SceneScripts\titleScreenUI.cs" />
-    <Compile Include="Assets\Scripts\ShieldPlayer.cs" />
     <Compile Include="Assets\Scripts\World\cameraMovement.cs" />
     <Compile Include="Assets\Scripts\World\RoadScript.cs" />
   </ItemGroup>
