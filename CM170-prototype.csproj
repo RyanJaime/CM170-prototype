@@ -81,6 +81,7 @@
     <Compile Include="Assets\CollideHealthDown.cs" />
     <Compile Include="Assets\GameManager.cs" />
     <Compile Include="Assets\HealthBar.cs" />
+    <Compile Include="Assets\ObstacleMovementNegX.cs" />
     <Compile Include="Assets\Scripts\Audio\AudioHelper.cs" />
     <Compile Include="Assets\Scripts\Audio\AudioPeer.cs" />
     <Compile Include="Assets\Scripts\Audio\masterFreqGenerator.cs" />

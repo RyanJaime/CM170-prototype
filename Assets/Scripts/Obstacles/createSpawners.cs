@@ -14,6 +14,14 @@ public class createSpawners : MonoBehaviour {
     public GameObject spawner21;
     public GameObject spawner22;
 
+    public GameObject spawnerRight00;
+    public GameObject spawnerRight01;
+    public GameObject spawnerRight02;
+
+    public GameObject spawnerLeft00;
+    public GameObject spawnerLeft01;
+    public GameObject spawnerLeft02;
+
     public static List<GameObject> spawnerList;
 	//public static createSpawners current;
 
@@ -31,6 +39,13 @@ public class createSpawners : MonoBehaviour {
         GameObject obj21 = Instantiate(spawner21);
         GameObject obj22 = Instantiate(spawner22);
 
+        GameObject objRight00 = Instantiate(spawnerRight00);
+        GameObject objRight01 = Instantiate(spawnerRight01);
+        GameObject objRight02 = Instantiate(spawnerRight02);
+
+        GameObject objLeft00 = Instantiate(spawnerLeft00);
+        GameObject objLeft01 = Instantiate(spawnerLeft01);
+        GameObject objLeft02 = Instantiate(spawnerLeft02);
 
         spawnerList.Add(obj00);
 		spawnerList.Add(obj01);
@@ -42,7 +57,15 @@ public class createSpawners : MonoBehaviour {
         spawnerList.Add(obj21);
         spawnerList.Add(obj22);
 
-        if (spawnerList.Count == 9) {
+        spawnerList.Add(objRight00);
+        spawnerList.Add(objRight01);
+        spawnerList.Add(objRight02);
+
+        spawnerList.Add(objLeft00);
+        spawnerList.Add(objLeft01);
+        spawnerList.Add(objLeft02);
+
+        if (spawnerList.Count == 15) {
 			ready = true;
 		}
 	}

@@ -25,6 +25,15 @@ public class MIDIparse : MonoBehaviour
     bool noteOn20 = false; bool firstSpawnofNoteOn20 = false;
     bool noteOn21 = false; bool firstSpawnofNoteOn21 = false;
     bool noteOn22 = false; bool firstSpawnofNoteOn22 = false;
+
+    bool noteOnRight00 = false; bool firstSpawnofNoteOnRight00 = false;
+    bool noteOnRight01 = false; bool firstSpawnofNoteOnRight01 = false;
+    bool noteOnRight02 = false; bool firstSpawnofNoteOnRight02 = false;
+
+    bool noteOnLeft00 = false; bool firstSpawnofNoteOnLeft00 = false;
+    bool noteOnLeft01 = false; bool firstSpawnofNoteOnLeft01 = false;
+    bool noteOnLeft02 = false; bool firstSpawnofNoteOnLeft02 = false;
+
     int inc = 0;
 
     private int contbitInt = 0;
@@ -67,7 +76,7 @@ public class MIDIparse : MonoBehaviour
     {
         startTime = Time.time;
        
-        TextAsset bytesFile = Resources.Load("cool") as TextAsset;
+        TextAsset bytesFile = Resources.Load("15notes") as TextAsset;
         byte[] data_array = bytesFile.bytes; // Put it into a byte array
 
         print("Attempting to Parse MIDI!");
@@ -243,6 +252,12 @@ public class MIDIparse : MonoBehaviour
         if (noteOn20) { createSpawners.spawnerList[6].GetComponent<spawner>().createObstacle(); }
         if (noteOn21) { createSpawners.spawnerList[7].GetComponent<spawner>().createObstacle(); }
         if (noteOn22) { createSpawners.spawnerList[8].GetComponent<spawner>().createObstacle(); }
+        if (noteOnRight00) { createSpawners.spawnerList[9].GetComponent<spawner>().createObstacle(); }
+        if (noteOnRight01) { createSpawners.spawnerList[10].GetComponent<spawner>().createObstacle(); }
+        if (noteOnRight02) { createSpawners.spawnerList[11].GetComponent<spawner>().createObstacle(); }
+        if (noteOnLeft00) { createSpawners.spawnerList[12].GetComponent<spawner>().createObstacle(); }
+        if (noteOnLeft01) { createSpawners.spawnerList[13].GetComponent<spawner>().createObstacle(); }
+        if (noteOnLeft02) { createSpawners.spawnerList[14].GetComponent<spawner>().createObstacle(); }
 
         print("ticksTotal after " + ticksTotal);
     }
@@ -284,6 +299,12 @@ public class MIDIparse : MonoBehaviour
             else if (localIntArray[2] == 6) { noteOn20 = noteOnKeepSpawning; firstSpawnofNoteOn20 = noteOnKeepSpawning; }
             else if (localIntArray[2] == 7) { noteOn21 = noteOnKeepSpawning; firstSpawnofNoteOn21 = noteOnKeepSpawning; }
             else if (localIntArray[2] == 8) { noteOn22 = noteOnKeepSpawning; firstSpawnofNoteOn22 = noteOnKeepSpawning; }
+            else if (localIntArray[2] == 9) { noteOnRight00 = noteOnKeepSpawning; firstSpawnofNoteOnRight00 = noteOnKeepSpawning; }
+            else if (localIntArray[2] == 10) { noteOnRight01 = noteOnKeepSpawning; firstSpawnofNoteOnRight01 = noteOnKeepSpawning; }
+            else if (localIntArray[2] == 11) { noteOnRight02 = noteOnKeepSpawning; firstSpawnofNoteOnLeft02 = noteOnKeepSpawning; }
+            else if (localIntArray[2] == 12) { noteOnLeft00 = noteOnKeepSpawning; firstSpawnofNoteOnLeft00 = noteOnKeepSpawning; }
+            else if (localIntArray[2] == 13) { noteOnLeft01 = noteOnKeepSpawning; firstSpawnofNoteOnLeft01 = noteOnKeepSpawning; }
+            else if (localIntArray[2] == 14) { noteOnLeft02 = noteOnKeepSpawning; firstSpawnofNoteOnLeft02 = noteOnKeepSpawning; }
         }
     }
 
