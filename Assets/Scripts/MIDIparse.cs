@@ -76,7 +76,7 @@ public class MIDIparse : MonoBehaviour
     {
         startTime = Time.time;
        
-        TextAsset bytesFile = Resources.Load("15notes") as TextAsset;
+        TextAsset bytesFile = Resources.Load("squareHammerIntro") as TextAsset;
         byte[] data_array = bytesFile.bytes; // Put it into a byte array
 
         print("Attempting to Parse MIDI!");
@@ -93,8 +93,8 @@ public class MIDIparse : MonoBehaviour
         float t = Time.time - startTime;
         float secondsPerFixedUpdate = Time.deltaTime;
         //print("FixedUpdate time : " + Time.deltaTime);
-        float TPQ = 100; // default for REAPER MIDI is 960
-        float BPM = 120; // default for REAPER MIDI is 120
+        float TPQ = 960; // default for REAPER MIDI is 960
+        float BPM = 130; // default for REAPER MIDI is 120
         float ms = (60000 / (BPM * TPQ));
         float s = ms / 1000;
 

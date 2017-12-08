@@ -24,7 +24,7 @@ public class spawner : MonoBehaviour {
 	void Update () {
 
 		if (obstacleArr.Count > 0) {
-			if (obstacleArr [0].transform.position.y > 20) {
+			if (obstacleArr [0].transform.position.x > 20 || obstacleArr[0].transform.position.y > 20 || obstacleArr [0].transform.position.y > 20) {
 				GameObject toBeDestroyed = obstacleArr [0];
 				obstacleArr.Remove (toBeDestroyed);
 				Destroy (toBeDestroyed);
