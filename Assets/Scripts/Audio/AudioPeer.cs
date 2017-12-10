@@ -6,7 +6,9 @@ using UnityEngine.SceneManagement;
 [RequireComponent (typeof (AudioSource))]
 public class AudioPeer : MonoBehaviour {
 
-	public AudioSource _audioSource;
+
+    public List<AudioClip> AudioList = new List<AudioClip>();
+    public AudioSource _audioSource;
 
 	public static int sampleNumber = 1024;
 	public static float[] _samples = new float[sampleNumber];
@@ -22,24 +24,39 @@ public class AudioPeer : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		_audioSource = GetComponent<AudioSource> ();
-		//sampleNumber = 1024;
-		//haveSource = false;
+        //runAudio();
+        _audioSource = GetComponent<AudioSource> ();
+        //sampleNumber = 1024;
+        //haveSource = false;
 
-		if (yourAudioClip != null) {
-			//setting clip
-			setAudioSource(yourAudioClip);
+        //if (yourAudioClip != null) {
+        //setting clip
+        //setAudioSource(yourAudioClip);
 
-
-			haveSource = true;
+        setAudioSource(AudioList[0]);
+        haveSource = true;
 
 			if (duration > 0.0f) {
-				playAudio ();
-				StartCoroutine (WaitForEnd ());
+                //yield return new WaitForSeconds(3.1f);
+                //playAudio();
+                StartCoroutine(PlayAudio());
+
+                StartCoroutine (WaitForEnd ());
 			}
 
-		}
+		
 	}
+
+    public void runAudio()
+    {
+        AudioPeer.yourAudioClip = AudioList[1];
+    }
+
+
+        void DelaySongPlay()
+    {
+       new WaitForSeconds(3.1f);
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -64,7 +81,18 @@ public class AudioPeer : MonoBehaviour {
 		duration = audio.length;
 	}
 
-	public void playAudio() {
+    IEnumerator PlayAudio()
+    {
+        if (_audioSource != null)
+        {
+            yield return new WaitForSeconds(2.91f); //2.73
+            _audioSource.Play();
+            //StartCoroutine (masterGenerator.GetComponent<masterFreqGenerator> ().waveSpawner());
+        }
+    }
+
+    
+    public void playAudio() {
 		if (_audioSource != null) {
 			_audioSource.Play ();
 			//StartCoroutine (masterGenerator.GetComponent<masterFreqGenerator> ().waveSpawner());

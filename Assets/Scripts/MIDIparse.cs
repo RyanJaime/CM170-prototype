@@ -12,7 +12,7 @@ public class MIDIparse : MonoBehaviour
     private float timeTotal = 0.0f;
     float ticksTotal = -100;
     private int index = 0;
-    private int checkerIndex = 0;
+    private int checkerIndex = 23; // 23 is the number of bytes into the file where note events start in the MTrk 0;
 
     private int giantIndex = 0;
     bool noteOnKeepSpawning = false;
@@ -34,26 +34,11 @@ public class MIDIparse : MonoBehaviour
     bool noteOnLeft01 = false; bool firstSpawnofNoteOnLeft01 = false;
     bool noteOnLeft02 = false; bool firstSpawnofNoteOnLeft02 = false;
 
-    int inc = 0;
+    //int inc = 0;
 
     private int contbitInt = 0;
-    private int lcontbitInt = 0;
-    private int mcontbitInt = 0;
-    private int rcontbitInt = 0;
+
     float ticksPerFixedUpdate = 0;
-    bool updateIncrementTicks = true;
-
-    int lindex =0;
-    int mindex=0;
-    int rindex=0;
-
-    int ti= 0;
-    int i = 0;
-    int j = 0;
-    int k = 0;
-    bool rNoteOn = false;
-    bool mNoteOn = false;
-    bool lNoteOn = false;
 
     // Each int array will hold
     // (deltaTime in dec, On / Off, what note)
@@ -61,9 +46,9 @@ public class MIDIparse : MonoBehaviour
 
     public List<int> anotherBigOneForDebugging = new List<int>();
 
-    public List<byte> rByteList = new List<byte>();
-    public List<byte> mByteList = new List<byte>();
-    public List<byte> lByteList = new List<byte>();
+    //public List<byte> rByteList = new List<byte>();
+    //public List<byte> mByteList = new List<byte>();
+    //public List<byte> lByteList = new List<byte>();
     // Debugging. Fill with bytes, compare how they look in Unity, Sublime
     string hexString = "";
     // Load the .bytes (MIDI) file as TextAsset
@@ -76,7 +61,7 @@ public class MIDIparse : MonoBehaviour
     {
         startTime = Time.time;
        
-        TextAsset bytesFile = Resources.Load("squareHammerIntro") as TextAsset;
+        TextAsset bytesFile = Resources.Load("squareMelody") as TextAsset;
         byte[] data_array = bytesFile.bytes; // Put it into a byte array
 
         print("Attempting to Parse MIDI!");
@@ -93,22 +78,21 @@ public class MIDIparse : MonoBehaviour
         float t = Time.time - startTime;
         float secondsPerFixedUpdate = Time.deltaTime;
         //print("FixedUpdate time : " + Time.deltaTime);
-        float TPQ = 960; // default for REAPER MIDI is 960
+        float TPQ = 150; // default for REAPER MIDI is 960 // 150
         float BPM = 130; // default for REAPER MIDI is 120
-        float ms = (60000 / (BPM * TPQ));
-        float s = ms / 1000;
+        //float ms = (60000 / (BPM * TPQ));
+        float s = (60 / (BPM * TPQ)); //ms / 1000;
 
         //print("MS:        " + ms);   // 0.5208333 ms for 1 tick. 1000 ms = 1 s
         //print("S:        " + s);   // 0.0005208333 s for 1 tick. 1000 ms = 1 s
         // about 1920 ticks per second
         // 26.041665 FixedUpdates for 1 tick
-        string secondsString = t.ToString("F6"); // (t % 60)
-        string msString = (ms % 60).ToString();
+        //string secondsString = t.ToString("F6"); // (t % 60)
+        //string msString = (ms % 60).ToString();
         ticksPerFixedUpdate = secondsPerFixedUpdate / s;
-
+        print("ticksPerFixedUpdate: " + ticksPerFixedUpdate);
         //foreach(byte item in rByteList) { print("right list" + item);}
         //print("What the bytes look like in Unity" + hexString); // Unity shortens 0x00 to 0x0
-
     }
 
     //public List<byte> getBytes(byte[] data_array)
@@ -151,49 +135,13 @@ public class MIDIparse : MonoBehaviour
                 newOneEveryTime[0] = deltaTime;
                 newOneEveryTime[1] = isNoteOn;
                 newOneEveryTime[2] = lane;
-
-
-                print("array "+newOneEveryTime[0] + " " + newOneEveryTime[1] + " " + newOneEveryTime[2]);
+                //print("array "+newOneEveryTime[0] + " " + newOneEveryTime[1] + " " + newOneEveryTime[2]);
 
                 oneGiantByteList.Add(newOneEveryTime);
 
                 anotherBigOneForDebugging.Add(newOneEveryTime[0]);
                 anotherBigOneForDebugging.Add(newOneEveryTime[1]);
                 anotherBigOneForDebugging.Add(newOneEveryTime[2]);
-            }
-
-
-            if (data_array[i] == 0x90 || data_array[i] == 0x80)
-            {
-                if (data_array[i + 1] == 0x3c)
-                {
-                    // adding the ticks, how long til spawn number
-                    //print(data_array[i - 2]);
-                    if (data_array[i - 2] >= 0x80)
-                    {
-                        //print("It's bigger than 0x80, value:" + data_array[i - 2]);
-                        rByteList.Add(data_array[i - 2]); // adding 8x, if it's there
-                    }
-                    rByteList.Add(data_array[i - 1]); // then add the rest to 8x or just this by itself
-                }
-                if (data_array[i + 1] == 0x3d)
-                {
-                    if (data_array[i - 2] >= 0x80)
-                    {
-                        //print("It's bigger than 0x80, value:" + data_array[i - 2]);
-                        mByteList.Add(data_array[i - 2]); // adding 8x, if it's there
-                    }
-                    mByteList.Add(data_array[i - 1]); // then add the rest to 8x or just this by itself
-                }
-                if (data_array[i + 1] == 0x3e)
-                {
-                    if (data_array[i - 2] >= 0x80)
-                    {
-                        //print("It's bigger than 0x80, value:" + data_array[i - 2]);
-                        lByteList.Add(data_array[i - 2]); // adding 8x, if it's there
-                    }
-                    lByteList.Add(data_array[i - 1]); // then add the rest to 8x or just this by itself
-                }
             }
         }
     }
@@ -204,7 +152,7 @@ public class MIDIparse : MonoBehaviour
 
         //print("ticksPerFixedUpdate: " + ticksPerFixedUpdate); // 38.4 with default REAPER TPQ and BPM
 
-        // function checks next event\s delta time
+        // function checks next event's delta time
         // when current ticks has reached that delta time, it turns note on.
         // bool is set to note on. bool tells function not to check again until next event's delta time has been reached.
 
@@ -221,11 +169,23 @@ public class MIDIparse : MonoBehaviour
             return;
         }
 
-            int[] currentIntArray;
-        int[] nextIntArray;
+        //int[] currentIntArray;
+        //int[] nextIntArray;
         int numberOfNotesTogether = 1;
 
 
+        for (checkerIndex= 23; checkerIndex < oneGiantByteList.Count - 15; checkerIndex++ )
+        {
+            for (int j = 0; j < 3; j++) // 3 is max number of notes that can be played together
+            { 
+                if (oneGiantByteList[checkerIndex + j][1] == 0) { break; } // if next event is a noteOff, stop syncing
+                if (oneGiantByteList[checkerIndex + j][0] == 0) // if the next note's delta time is 0, it should sync with previous noteOn
+                {
+                    numberOfNotesTogether++;
+                }
+            }
+        }
+        /*
         if (checkerIndex < oneGiantByteList.Count - 4)
         {
             currentIntArray = oneGiantByteList[checkerIndex];
@@ -235,12 +195,16 @@ public class MIDIparse : MonoBehaviour
             {
                numberOfNotesTogether = 2;
             }
-        }
-
-        for (i = 0; i < numberOfNotesTogether; i++)
-        {
+        } */
+        print("Playing " + numberOfNotesTogether + " notes togeher. (syncing noteOn)");
+        //for (int i = 0; i < numberOfNotesTogether; i++)
+        //{
+            DateTime before = DateTime.Now;
             spawnornot();
-        }
+            DateTime after = DateTime.Now;
+            TimeSpan duration = after.Subtract(before);
+            print("How long function took in s: " + duration.Milliseconds);
+        //}
 
 
         if (noteOn00) { createSpawners.spawnerList[0].GetComponent<spawner>().createObstacle(); }
@@ -264,6 +228,7 @@ public class MIDIparse : MonoBehaviour
 
     public void spawnornot()
     {
+        
         if (giantIndex < oneGiantByteList.Count)
         {
             int[] localIntArray = oneGiantByteList[giantIndex];
@@ -306,6 +271,7 @@ public class MIDIparse : MonoBehaviour
             else if (localIntArray[2] == 13) { noteOnLeft01 = noteOnKeepSpawning; firstSpawnofNoteOnLeft01 = noteOnKeepSpawning; }
             else if (localIntArray[2] == 14) { noteOnLeft02 = noteOnKeepSpawning; firstSpawnofNoteOnLeft02 = noteOnKeepSpawning; }
         }
+        
     }
 
     public int calculateContinuationBit(List<byte> deltaTimes) {
@@ -369,83 +335,4 @@ public class MIDIparse : MonoBehaviour
         bitArray.CopyTo(array, 0);
         return array[0];
     }
-
-    void Update()
-    {
-        
-    }
-
-    /*
-    public bool oneByteDeltaTime(int indy, List<byte> deltaTimes, int spawnNum, bool noteOn)
-    {
-        // 1 byte delta times
-        int ticksToWait = deltaTimes[indy];
-        bool incrementTicks = true;
-
-        if (ticksTotal > ticksToWait) // (ticksToWait >= ticksTotal)
-        {
-            if (!noteOn)
-            {
-                // spawning cuz a 1 byte delta time
-                print("turning note on, lane: " + spawnNum);
-                createSpawners.spawnerList[spawnNum].GetComponent<spawner>().createObstacle();
-                noteOn = true;
-                //ticksTotal = 0;
-                //localTicks = 0;
-                //incrementTicks = false;
-                indy++;
-            }
-            else
-            {
-                print("turning note off, lane: " + spawnNum);
-                noteOn = false;
-                //ticksTotal = 0;
-                //localTicks = 0;
-                incrementTicks = false;
-                indy++;
-            }
-
-            if (spawnNum == 0) { lNoteOn = noteOn; lindex = indy; }
-            else if (spawnNum == 1) { mNoteOn = noteOn; mindex = indy; }
-            else if (spawnNum == 2) { rNoteOn = noteOn; rindex = indy; }
-        }
-        return incrementTicks;
-    }
-    
-    
-    public float spawnBasedOnContBitsDeltaTime(float localTicks, int theContbitInt, int spawnNum, bool noteOn)
-    {
-        // compare contbitBA to ticks 
-        if (theContbitInt > 0 && localTicks >= theContbitInt) //
-        {
-            // spawning cuz a continuation bit delta time 
-            if (!noteOn)
-            {
-                print("spawning cuz a continuation bit delta time");
-                
-                createSpawners.spawnerList[spawnNum].GetComponent<spawner>().createObstacle();
-
-                localTicks = 0;
-                theContbitInt = 0;
-                noteOn = true;
-                index += 2;
-            }
-            else
-            {
-                //print("note has not ended, continue spawning (from spawnBasedOnContBitsDeltaTime)");
-                //print("idk what's happening");
-
-                localTicks = 0;
-                theContbitInt = 0;
-                noteOn = false;
-                index += 2;
-            }
-
-            if (spawnNum == 0) { lNoteOn = noteOn; lcontbitInt = theContbitInt; }
-            else if (spawnNum == 1) { mNoteOn = noteOn; mcontbitInt = theContbitInt; }
-            else if (spawnNum == 2) { rNoteOn = noteOn; rcontbitInt = theContbitInt; } //ticksTotal = localTicks; }
-        }
-        return localTicks;
-    }
-    */
 }

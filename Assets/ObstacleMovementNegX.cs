@@ -10,7 +10,7 @@ public class ObstacleMovementNegX : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
         transform.position = new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z);
     }
 }
