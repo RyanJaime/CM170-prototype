@@ -124,37 +124,43 @@ public class MIDIparse : MonoBehaviour
                 }
 
                 int lane = data_array[i + 1] - 60;
-                int tickLengthOfObstacle = 0;
+                //int tickLengthOfObstacle = 0;
 
                 
-                bool stop1 = false;
-                int numSyncedNotes2 = 1;
+                //bool stop1 = false;
+                //int numSyncedNotes2 = 1;
                 if (data_array[i] == 0x90)
                 {
                     isNoteOn = 1;
-                    // look for it's corresponding noteOff
-                    for (int j = i+1; j < data_array.Length-3; j++)
+                }
+                else if (data_array[i] == 0x80) { isNoteOn = 0; }
+
+                /*
+                isNoteOn = 1;
+                // look for it's corresponding noteOff
+                for (int j = i+1; j < data_array.Length-3; j++)
+                {
+
+
+                    if (data_array[j] == 0x80 && data_array[j+1] == data_array[i+1]) //{ stop1 = true; print("stopping with " + numSyncedNotes2 + " notes because " + data_array[j]); } // if next event is a noteOff, stop syncing
+                    //else if (data_array[j] == 90)
                     {
 
-
-                        if (data_array[j] == 0x80 && data_array[j+1] == data_array[i+1]) //{ stop1 = true; print("stopping with " + numSyncedNotes2 + " notes because " + data_array[j]); } // if next event is a noteOff, stop syncing
-                        //else if (data_array[j] == 90)
-                        {
-
-                            // when we find noteOff in the same lane
-                            //if (data_array[j] == data_array[i + 1] && data_array[j - 1] == 0x80)
-                            //{
-                                tickLengthOfObstacle = data_array[j - 2];
-                                print("Ticklength of obstacle: " + tickLengthOfObstacle);
-                           // }
-                        }
+                        // when we find noteOff in the same lane
+                        //if (data_array[j] == data_array[i + 1] && data_array[j - 1] == 0x80)
+                        //{
+                            tickLengthOfObstacle = data_array[j - 2];
+                            print("Ticklength of obstacle: " + tickLengthOfObstacle);
+                       // }
                     }
-
                 }
 
+            }
+            */
 
 
-                
+
+
 
                 //else if (data_array[i] == 0x80) { isNoteOn = 0; }
 
@@ -164,7 +170,7 @@ public class MIDIparse : MonoBehaviour
                 newOneEveryTime[0] = deltaTime;
                 newOneEveryTime[1] = isNoteOn;
                 newOneEveryTime[2] = lane;
-                newOneEveryTime[3] = tickLengthOfObstacle;
+                //newOneEveryTime[3] = tickLengthOfObstacle;
                 //print("array "+newOneEveryTime[0] + " " + newOneEveryTime[1] + " " + newOneEveryTime[2]);
 
                 oneGiantByteList.Add(newOneEveryTime);
@@ -176,20 +182,42 @@ public class MIDIparse : MonoBehaviour
             }
         }
 
-        /*
-        int tickLengthOfObstacle = 0;
-        bool stop1 = false;
-        int numSyncedNotes2 = 1;
+        
+        int tickLengthOfObstacle = 1;
+        //bool stop1 = false;
+        //int numSyncedNotes2 = 1;
         for (int i = 0; i < oneGiantByteList.Count; i++)
         {
-            if (oneGiantByteList[i][1] == 0)
+            tickLengthOfObstacle = 0;
+            if (oneGiantByteList[i][1] == 1)
             {
                 // look for it's corresponding noteOff
-                for (int j = i + 1; j < data_array.Length - 3; j++)
+                for (int j = i + 1; j < oneGiantByteList.Count; j++)
                 {
+                    tickLengthOfObstacle += oneGiantByteList[j][0];
+                    // if same note && noteOff
+                    if (oneGiantByteList[j][2] == oneGiantByteList[i][2] &&   oneGiantByteList[j][1] == 0)
+                    {
+                        // stop because note off
+                        break;
+                    }
+                        
+                }
+                print("TICKLEGNTHTHTH : " + tickLengthOfObstacle);
+                int[] localIntArray = new int[5];
+
+                localIntArray = oneGiantByteList[i];
+                localIntArray[3] = tickLengthOfObstacle;
+                oneGiantByteList[i] = localIntArray;
+                print("tick length in list: " + oneGiantByteList[i][3]);
+
+                //oneGiantByteList[i][3] = tickLengthOfObstacle;
 
 
-                    if (oneGiantByteList[j][1] == 1) { stop1 = true; print("stopping with " + numSyncedNotes2 + " notes because " + oneGiantByteList[j][1]); } // if next event is a noteOff, stop syncing
+
+
+                /*
+                        if (oneGiantByteList[j][1] == 1) { stop1 = true; print("stopping with " + numSyncedNotes2 + " notes because " + oneGiantByteList[j][1]); } // if next event is a noteOff, stop syncing
                     else if (oneGiantByteList[j][0] == 0)
 
                         // when we find noteOff in the same lane
@@ -197,12 +225,13 @@ public class MIDIparse : MonoBehaviour
                         {
                             tickLengthOfObstacle = data_array[j - 2];
                         }
-                }
+                        */
+                
 
             }
         }
         
-
+        /*
         bool stop = false;
         int numSyncedNotes = 1;
         for (checkerIndex = 23; checkerIndex < oneGiantByteList.Count - 15; checkerIndex++)
@@ -305,8 +334,9 @@ public class MIDIparse : MonoBehaviour
 
             if (ticksTotal >= localIntArray[0])
             {
-                if (localIntArray[1] == 1)
+                if (localIntArray[1] == 1) //was ==1
                 {
+                    print("spawning note of ticklength: " + localIntArray[3]);
                     createSpawners.spawnerList[localIntArray[2]].GetComponent<spawner>().createObstacle(localIntArray[3]);
                     //for (int i=0; i < localNumSyncedNotes; i++)
                     //{
