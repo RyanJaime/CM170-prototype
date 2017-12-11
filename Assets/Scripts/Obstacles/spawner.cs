@@ -45,9 +45,13 @@ public class spawner : MonoBehaviour {
 
 	//execute params means that whatever the masterFreqGen obj sends to a particular spawner, execute those parameters
     
-	public void createObstacle() {
+    //ticks / 10 = YieldInstruction length of block
+
+
+	public void createObstacle(int ticks) {
 		Vector3 spawnPosition = new Vector3 (0,0,0);
 		clone = Instantiate (obstacle, spawnPosition = transform.TransformPoint (spawnPosX, 0, spawnPosZ), gameObject.transform.rotation);
+        clone.transform.localScale = new Vector3(1f, ticks / 10, 1f); // fiddle with ticks/10, the Yscale of each obstacle
 		obstacleArr.Add (clone);
 	}
 }

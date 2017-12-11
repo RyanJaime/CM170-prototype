@@ -46,11 +46,8 @@ public class MIDIparse : MonoBehaviour
 
     public List<int> anotherBigOneForDebugging = new List<int>();
 
-    //public List<byte> rByteList = new List<byte>();
-    //public List<byte> mByteList = new List<byte>();
-    //public List<byte> lByteList = new List<byte>();
     // Debugging. Fill with bytes, compare how they look in Unity, Sublime
-    string hexString = "";
+    //string hexString = "";
     // Load the .bytes (MIDI) file as TextAsset
     // might want to check if it's actually a .bytes file before attempting to load?
     
@@ -61,7 +58,7 @@ public class MIDIparse : MonoBehaviour
     {
         startTime = Time.time;
        
-        TextAsset bytesFile = Resources.Load("squareMelody") as TextAsset;
+        TextAsset bytesFile = Resources.Load("snareMelody") as TextAsset;
         byte[] data_array = bytesFile.bytes; // Put it into a byte array
 
         print("Attempting to Parse MIDI!");
@@ -99,10 +96,10 @@ public class MIDIparse : MonoBehaviour
     // adds to the left, middle, right byte lists
     public void getBytes(byte[] data_array)
     {
-        for (int i = 22; i < data_array.Length; i++)
+        for (int i = 22; i < data_array.Length - 4; i++)
         {
-            hexString += data_array[i].ToString("x"); // concat to string in hex format
-            if (i % 2 == 1) { hexString += ' '; } // add a space after every 2 byte buddies
+            //hexString += data_array[i].ToString("x"); // concat to string in hex format
+            //if (i % 2 == 1) { hexString += ' '; } // add a space after every 2 byte buddies
 
             if (data_array[i] == 0x90 || data_array[i] == 0x80)
             {
@@ -110,7 +107,7 @@ public class MIDIparse : MonoBehaviour
                 int isNoteOn = 0;
                 List<byte> tempContByteList = new List<byte>();
                 int deltaTime = 0;
-                if (i-2 > 21 && data_array[i - 2] >= 0x80)
+                if (i - 2 > 21 && data_array[i - 2] >= 0x80)
                 {
                     tempContByteList.Add(data_array[i - 2]);
                 }
@@ -126,15 +123,48 @@ public class MIDIparse : MonoBehaviour
                     deltaTime = tempContByteList[0];
                 }
 
-                if (data_array[i] == 0x90) { isNoteOn = 1; }
-                else if (data_array[i] == 0x80) { isNoteOn = 0; }
-
                 int lane = data_array[i + 1] - 60;
-               
-                int[] newOneEveryTime = new int[3];
+                int tickLengthOfObstacle = 0;
+
+                
+                bool stop1 = false;
+                int numSyncedNotes2 = 1;
+                if (data_array[i] == 0x90)
+                {
+                    isNoteOn = 1;
+                    // look for it's corresponding noteOff
+                    for (int j = i+1; j < data_array.Length-3; j++)
+                    {
+
+
+                        if (data_array[j] == 0x80 && data_array[j+1] == data_array[i+1]) //{ stop1 = true; print("stopping with " + numSyncedNotes2 + " notes because " + data_array[j]); } // if next event is a noteOff, stop syncing
+                        //else if (data_array[j] == 90)
+                        {
+
+                            // when we find noteOff in the same lane
+                            //if (data_array[j] == data_array[i + 1] && data_array[j - 1] == 0x80)
+                            //{
+                                tickLengthOfObstacle = data_array[j - 2];
+                                print("Ticklength of obstacle: " + tickLengthOfObstacle);
+                           // }
+                        }
+                    }
+
+                }
+
+
+
+                
+
+                //else if (data_array[i] == 0x80) { isNoteOn = 0; }
+
+                //int lane = data_array[i + 1] - 60;
+
+                int[] newOneEveryTime = new int[5];
                 newOneEveryTime[0] = deltaTime;
                 newOneEveryTime[1] = isNoteOn;
                 newOneEveryTime[2] = lane;
+                newOneEveryTime[3] = tickLengthOfObstacle;
                 //print("array "+newOneEveryTime[0] + " " + newOneEveryTime[1] + " " + newOneEveryTime[2]);
 
                 oneGiantByteList.Add(newOneEveryTime);
@@ -142,8 +172,62 @@ public class MIDIparse : MonoBehaviour
                 anotherBigOneForDebugging.Add(newOneEveryTime[0]);
                 anotherBigOneForDebugging.Add(newOneEveryTime[1]);
                 anotherBigOneForDebugging.Add(newOneEveryTime[2]);
+                anotherBigOneForDebugging.Add(newOneEveryTime[3]);
             }
         }
+
+        /*
+        int tickLengthOfObstacle = 0;
+        bool stop1 = false;
+        int numSyncedNotes2 = 1;
+        for (int i = 0; i < oneGiantByteList.Count; i++)
+        {
+            if (oneGiantByteList[i][1] == 0)
+            {
+                // look for it's corresponding noteOff
+                for (int j = i + 1; j < data_array.Length - 3; j++)
+                {
+
+
+                    if (oneGiantByteList[j][1] == 1) { stop1 = true; print("stopping with " + numSyncedNotes2 + " notes because " + oneGiantByteList[j][1]); } // if next event is a noteOff, stop syncing
+                    else if (oneGiantByteList[j][0] == 0)
+
+                        // when we find noteOff in the same lane
+                        if (data_array[j] == data_array[i + 1] && data_array[j - 1] == 0x80)
+                        {
+                            tickLengthOfObstacle = data_array[j - 2];
+                        }
+                }
+
+            }
+        }
+        
+
+        bool stop = false;
+        int numSyncedNotes = 1;
+        for (checkerIndex = 23; checkerIndex < oneGiantByteList.Count - 15; checkerIndex++)
+        {
+
+            if (oneGiantByteList[checkerIndex][1] == 0)
+            {
+                //print("oneGiantByteList[checkerIndex][1] == 0");
+                for (int j = 0; j < 15; j++) // 15 is max number of notes that can be played together
+                {
+                    if (!stop)
+                    {
+                        if (oneGiantByteList[checkerIndex + j][1] == 1) { stop = true; print("stopping with " + numSyncedNotes + " notes because " + oneGiantByteList[checkerIndex + j][1]); } // if next event is a noteOff, stop syncing
+                        else if (oneGiantByteList[checkerIndex + j][0] == 0) // if the next note's delta time is 0, it should sync with previous noteOn
+                        {
+                            numSyncedNotes++;
+                        }
+                    }
+                }
+            }
+            oneGiantByteList[checkerIndex][4] = numSyncedNotes;
+
+        }
+        */
+
     }
 
     void FixedUpdate() // update every 0.02 ms
@@ -169,23 +253,27 @@ public class MIDIparse : MonoBehaviour
             return;
         }
 
-        //int[] currentIntArray;
-        //int[] nextIntArray;
-        int numberOfNotesTogether = 1;
+        //int numSyncedNotes = 1;
+        //bool stop = false;
 
-
-        for (checkerIndex= 23; checkerIndex < oneGiantByteList.Count - 15; checkerIndex++ )
-        {
-            for (int j = 0; j < 3; j++) // 3 is max number of notes that can be played together
-            { 
-                if (oneGiantByteList[checkerIndex + j][1] == 0) { break; } // if next event is a noteOff, stop syncing
-                if (oneGiantByteList[checkerIndex + j][0] == 0) // if the next note's delta time is 0, it should sync with previous noteOn
-                {
-                    numberOfNotesTogether++;
+        //for (checkerIndex= 23; checkerIndex < oneGiantByteList.Count - 15; checkerIndex++ )
+        //{\
+        /*
+        print("                              G " + oneGiantByteList[checkerIndex][1]);
+        if (oneGiantByteList[checkerIndex][1] == 0) {
+            print("oneGiantByteList[checkerIndex][1] == 1");
+            for (int j = 0; j < 15; j++) // 15 is max number of notes that can be played together
+            {
+                if (!stop) {
+                        if (oneGiantByteList[checkerIndex + j][1] == 1) { stop = true; print("stopping with " + numSyncedNotes + " notes because " + oneGiantByteList[checkerIndex + j][1]); } // if next event is a noteOff, stop syncing
+                    else if (oneGiantByteList[checkerIndex + j][0] == 0) // if the next note's delta time is 0, it should sync with previous noteOn
+                    {
+                        numSyncedNotes++;
+                    }
                 }
             }
         }
-        /*
+        
         if (checkerIndex < oneGiantByteList.Count - 4)
         {
             currentIntArray = oneGiantByteList[checkerIndex];
@@ -196,37 +284,19 @@ public class MIDIparse : MonoBehaviour
                numberOfNotesTogether = 2;
             }
         } */
-        print("Playing " + numberOfNotesTogether + " notes togeher. (syncing noteOn)");
-        //for (int i = 0; i < numberOfNotesTogether; i++)
+        //print("Playing " + numSyncedNotes + " notes togeher. (syncing noteOn)");
+       // for (int i = 0; i < oneGiantByteList[giantIndex][4]; i++)
         //{
-            DateTime before = DateTime.Now;
-            spawnornot();
-            DateTime after = DateTime.Now;
-            TimeSpan duration = after.Subtract(before);
-            print("How long function took in s: " + duration.Milliseconds);
+            //DateTime before = DateTime.Now;
+            spawnornot(oneGiantByteList[giantIndex][4]);
+            //DateTime after = DateTime.Now;
+            //TimeSpan duration = after.Subtract(before);
+            //print("How long function took in s: " + duration.Milliseconds);
         //}
-
-
-        if (noteOn00) { createSpawners.spawnerList[0].GetComponent<spawner>().createObstacle(); }
-        if (noteOn01) { createSpawners.spawnerList[1].GetComponent<spawner>().createObstacle(); }
-        if (noteOn02) { createSpawners.spawnerList[2].GetComponent<spawner>().createObstacle(); }
-        if (noteOn10) { createSpawners.spawnerList[3].GetComponent<spawner>().createObstacle(); }
-        if (noteOn11) { createSpawners.spawnerList[4].GetComponent<spawner>().createObstacle(); }
-        if (noteOn12) { createSpawners.spawnerList[5].GetComponent<spawner>().createObstacle(); }
-        if (noteOn20) { createSpawners.spawnerList[6].GetComponent<spawner>().createObstacle(); }
-        if (noteOn21) { createSpawners.spawnerList[7].GetComponent<spawner>().createObstacle(); }
-        if (noteOn22) { createSpawners.spawnerList[8].GetComponent<spawner>().createObstacle(); }
-        if (noteOnRight00) { createSpawners.spawnerList[9].GetComponent<spawner>().createObstacle(); }
-        if (noteOnRight01) { createSpawners.spawnerList[10].GetComponent<spawner>().createObstacle(); }
-        if (noteOnRight02) { createSpawners.spawnerList[11].GetComponent<spawner>().createObstacle(); }
-        if (noteOnLeft00) { createSpawners.spawnerList[12].GetComponent<spawner>().createObstacle(); }
-        if (noteOnLeft01) { createSpawners.spawnerList[13].GetComponent<spawner>().createObstacle(); }
-        if (noteOnLeft02) { createSpawners.spawnerList[14].GetComponent<spawner>().createObstacle(); }
-
         print("ticksTotal after " + ticksTotal);
     }
 
-    public void spawnornot()
+    public void spawnornot(int localNumSyncedNotes)
     {
         
         if (giantIndex < oneGiantByteList.Count)
@@ -237,17 +307,24 @@ public class MIDIparse : MonoBehaviour
             {
                 if (localIntArray[1] == 1)
                 {
-                    print("Note ON in lane: " + localIntArray[2] + " at ticks: " + localIntArray[0]);
-                    createSpawners.spawnerList[localIntArray[2]].GetComponent<spawner>().createObstacle();
-                    noteOnKeepSpawning = true;
+                    createSpawners.spawnerList[localIntArray[2]].GetComponent<spawner>().createObstacle(localIntArray[3]);
+                    //for (int i=0; i < localNumSyncedNotes; i++)
+                    //{
+                    //    print("Note ON in lane: " + oneGiantByteList[giantIndex + i][2] + " at ticks: " + oneGiantByteList[giantIndex + i][3]);
+                    //    createSpawners.spawnerList[oneGiantByteList[giantIndex+i][2]].GetComponent<spawner>().createObstacle(oneGiantByteList[giantIndex + i][3]);
+                    //}
+                    //print("Note ON in lane: " + localIntArray[2] + " at ticks: " + localIntArray[0] + " for duration: " + " ticks");
+                    //createSpawners.spawnerList[localIntArray[2]].GetComponent<spawner>().createObstacle(localIntArray[3]);
+                    //noteOnKeepSpawning = true;
                 }
+                /*
                 else if (localIntArray[1] == 0)
                 {
                     print("Note OFF in lane: " + localIntArray[2] + " at ticks: " + localIntArray[0]);
                     //createSpawners.spawnerList[localIntArray[2]].GetComponent<spawner>().createObstacle();
                     noteOnKeepSpawning = false;
                 }
-
+                */
                 giantIndex++;
                 ticksTotal = 0;
                 //spawnornot();
@@ -255,21 +332,6 @@ public class MIDIparse : MonoBehaviour
             }
             else { ticksTotal += ticksPerFixedUpdate; }
 
-            if (localIntArray[2] == 0) { noteOn00 = noteOnKeepSpawning; firstSpawnofNoteOn00 = noteOnKeepSpawning; }
-            else if (localIntArray[2] == 1) { noteOn01 = noteOnKeepSpawning; firstSpawnofNoteOn01 = noteOnKeepSpawning; }
-            else if (localIntArray[2] == 2) { noteOn02 = noteOnKeepSpawning; firstSpawnofNoteOn02 = noteOnKeepSpawning; }
-            else if (localIntArray[2] == 3) { noteOn10 = noteOnKeepSpawning; firstSpawnofNoteOn10 = noteOnKeepSpawning; }
-            else if (localIntArray[2] == 4) { noteOn11 = noteOnKeepSpawning; firstSpawnofNoteOn11= noteOnKeepSpawning; }
-            else if (localIntArray[2] == 5) { noteOn12 = noteOnKeepSpawning; firstSpawnofNoteOn12 = noteOnKeepSpawning; }
-            else if (localIntArray[2] == 6) { noteOn20 = noteOnKeepSpawning; firstSpawnofNoteOn20 = noteOnKeepSpawning; }
-            else if (localIntArray[2] == 7) { noteOn21 = noteOnKeepSpawning; firstSpawnofNoteOn21 = noteOnKeepSpawning; }
-            else if (localIntArray[2] == 8) { noteOn22 = noteOnKeepSpawning; firstSpawnofNoteOn22 = noteOnKeepSpawning; }
-            else if (localIntArray[2] == 9) { noteOnRight00 = noteOnKeepSpawning; firstSpawnofNoteOnRight00 = noteOnKeepSpawning; }
-            else if (localIntArray[2] == 10) { noteOnRight01 = noteOnKeepSpawning; firstSpawnofNoteOnRight01 = noteOnKeepSpawning; }
-            else if (localIntArray[2] == 11) { noteOnRight02 = noteOnKeepSpawning; firstSpawnofNoteOnLeft02 = noteOnKeepSpawning; }
-            else if (localIntArray[2] == 12) { noteOnLeft00 = noteOnKeepSpawning; firstSpawnofNoteOnLeft00 = noteOnKeepSpawning; }
-            else if (localIntArray[2] == 13) { noteOnLeft01 = noteOnKeepSpawning; firstSpawnofNoteOnLeft01 = noteOnKeepSpawning; }
-            else if (localIntArray[2] == 14) { noteOnLeft02 = noteOnKeepSpawning; firstSpawnofNoteOnLeft02 = noteOnKeepSpawning; }
         }
         
     }

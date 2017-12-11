@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class masterFreqGenerator : MonoBehaviour {
-
+    /*
 	public float spawnWait;
 	public float spawnMostWait;
 	public float spawnLeastWait;
@@ -95,7 +95,7 @@ public class masterFreqGenerator : MonoBehaviour {
 				}  
 			}
 
-			/*
+			
 			   while (!stop) {
 				//right now its spawning after x amount of time
 
@@ -113,11 +113,12 @@ public class masterFreqGenerator : MonoBehaviour {
 					createSpawners.spawnerList[2].GetComponent<spawner>().execute ();
 				}
 			}
-            */
+            
 			
 
 		}
 
 
 	}
+*/
 }

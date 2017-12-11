@@ -85,7 +85,7 @@ public class AudioPeer : MonoBehaviour {
     {
         if (_audioSource != null)
         {
-            yield return new WaitForSeconds(2.91f); //2.73
+            yield return new WaitForSeconds(2.3f); //2.73 // 2.91
             _audioSource.Play();
             //StartCoroutine (masterGenerator.GetComponent<masterFreqGenerator> ().waveSpawner());
         }
