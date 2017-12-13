@@ -58,7 +58,7 @@ public class MIDIparse : MonoBehaviour
     {
         startTime = Time.time;
        
-        TextAsset bytesFile = Resources.Load("snareMelody") as TextAsset;
+        TextAsset bytesFile = Resources.Load("squareMelody") as TextAsset;
         byte[] data_array = bytesFile.bytes; // Put it into a byte array
 
         print("Attempting to Parse MIDI!");
@@ -239,6 +239,7 @@ public class MIDIparse : MonoBehaviour
         for (checkerIndex = 0; checkerIndex < oneGiantByteList.Count; checkerIndex++)
         {
             numSyncedNotes = 1;
+            /*
             stop = false;
             if (oneGiantByteList[checkerIndex][1] == 1) // noteOn!
             {
@@ -261,13 +262,10 @@ public class MIDIparse : MonoBehaviour
                     }
                 }
             }
+            */
             oneGiantByteList[checkerIndex][4] = numSyncedNotes;
 
         }
-
-        
-
-
     }
 
     void fuckingPrint()
