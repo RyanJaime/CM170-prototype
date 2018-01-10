@@ -16,6 +16,8 @@ public class MIDIparse : MonoBehaviour
 
     private int giantIndex = 0;
     bool noteOnKeepSpawning = false;
+
+
     bool noteOn00 = false; bool firstSpawnofNoteOn00 = false;
     bool noteOn01 = false; bool firstSpawnofNoteOn01 = false;
     bool noteOn02 = false; bool firstSpawnofNoteOn02 = false;
@@ -34,7 +36,6 @@ public class MIDIparse : MonoBehaviour
     bool noteOnLeft01 = false; bool firstSpawnofNoteOnLeft01 = false;
     bool noteOnLeft02 = false; bool firstSpawnofNoteOnLeft02 = false;
 
-    //int inc = 0;
 
     private int contbitInt = 0;
 
@@ -58,7 +59,7 @@ public class MIDIparse : MonoBehaviour
     {
         startTime = Time.time;
        
-        TextAsset bytesFile = Resources.Load("squareMelody") as TextAsset;
+        TextAsset bytesFile = Resources.Load("15notes") as TextAsset;
         byte[] data_array = bytesFile.bytes; // Put it into a byte array
 
         print("Attempting to Parse MIDI!");
@@ -93,8 +94,7 @@ public class MIDIparse : MonoBehaviour
         //print("What the bytes look like in Unity" + hexString); // Unity shortens 0x00 to 0x0
     }
 
-    //public List<byte> getBytes(byte[] data_array)
-    // adds to the left, middle, right byte lists
+    // add to the byte lists
     public void getBytes(byte[] data_array)
     {
         for (int i = 22; i < data_array.Length - 4; i++)
@@ -135,37 +135,6 @@ public class MIDIparse : MonoBehaviour
                     isNoteOn = 1;
                 }
                 else if (data_array[i] == 0x80) { isNoteOn = 0; }
-
-                /*
-                isNoteOn = 1;
-                // look for it's corresponding noteOff
-                for (int j = i+1; j < data_array.Length-3; j++)
-                {
-
-
-                    if (data_array[j] == 0x80 && data_array[j+1] == data_array[i+1]) //{ stop1 = true; print("stopping with " + numSyncedNotes2 + " notes because " + data_array[j]); } // if next event is a noteOff, stop syncing
-                    //else if (data_array[j] == 90)
-                    {
-
-                        // when we find noteOff in the same lane
-                        //if (data_array[j] == data_array[i + 1] && data_array[j - 1] == 0x80)
-                        //{
-                            tickLengthOfObstacle = data_array[j - 2];
-                            print("Ticklength of obstacle: " + tickLengthOfObstacle);
-                       // }
-                    }
-                }
-
-            }
-            */
-
-
-
-
-
-                //else if (data_array[i] == 0x80) { isNoteOn = 0; }
-
-                //int lane = data_array[i + 1] - 60;
 
                 int[] newOneEveryTime = new int[5];
                 newOneEveryTime[0] = deltaTime;
@@ -211,24 +180,6 @@ public class MIDIparse : MonoBehaviour
                 localIntArray[3] = tickLengthOfObstacle;
                 oneGiantByteList[i] = localIntArray;
                 //print("tick length in list: " + oneGiantByteList[i][3]);
-
-                //oneGiantByteList[i][3] = tickLengthOfObstacle;
-
-
-
-
-                /*
-                        if (oneGiantByteList[j][1] == 1) { stop1 = true; print("stopping with " + numSyncedNotes2 + " notes because " + oneGiantByteList[j][1]); } // if next event is a noteOff, stop syncing
-                    else if (oneGiantByteList[j][0] == 0)
-
-                        // when we find noteOff in the same lane
-                        if (data_array[j] == data_array[i + 1] && data_array[j - 1] == 0x80)
-                        {
-                            tickLengthOfObstacle = data_array[j - 2];
-                        }
-                        */
-                
-
             }
         }
         
@@ -268,6 +219,24 @@ public class MIDIparse : MonoBehaviour
         }
     }
 
+    public List<int[]> getMIDIList()
+    {
+        TextAsset bytesFile = Resources.Load("15notes") as TextAsset;
+        byte[] data_array = bytesFile.bytes; // Put it into a byte array
+
+        print("Attempting to GET MIDI LIST!");
+        //print("Length:" + data_array.Length); // Total number of bytes 
+
+        if (data_array[0] != 0x4d || data_array[1] != 0x54 || data_array[2] != 0x68 || data_array[3] != 0x64)
+        {
+            Debug.Log(String.Format("no 'MThd', so it's not a MIDI file\n" +
+                                    "{0:x}{1:x} {2:x}{3:x}", data_array[0], data_array[1], data_array[2], data_array[3]));
+        }
+
+        getBytes(data_array);
+        return oneGiantByteList;
+    }
+
     void fuckingPrint()
     {
         string printThisShit = "";
@@ -298,7 +267,7 @@ public class MIDIparse : MonoBehaviour
 
         // check if ticksTotal >= any spawner's next delta time
 
-        // delta time, isnoteon, lane
+        // delta time, isnoteon, lane, length, #synced
 
         // check if next note is spawning at the same time, if it is, call function again
 
@@ -344,7 +313,8 @@ public class MIDIparse : MonoBehaviour
        // for (int i = 0; i < oneGiantByteList[giantIndex][4]; i++)
         //{
             //DateTime before = DateTime.Now;
-            spawnornot(oneGiantByteList[giantIndex][4]);
+            ////spawnornot(oneGiantByteList[giantIndex][4]);
+            spawnornot(1);
             //DateTime after = DateTime.Now;
             //TimeSpan duration = after.Subtract(before);
             //print("How long function took in s: " + duration.Milliseconds);
