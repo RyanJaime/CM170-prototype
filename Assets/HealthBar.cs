@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-
     public Image currentHealthbar;
     public GameManager theGameManager;
     //public Material materialHealthbar;
@@ -17,34 +16,28 @@ public class HealthBar : MonoBehaviour
     public GameObject audioSource;
     private AudioLowPassFilter lpf;
 
-	public float dmg = 8;
+    public int scorePoints = 1;
+    public float dmg = 8;
     public float hitpoints = 100;
     public float maxHitpoint = 100;
-	float ratioDmg;
+    float ratioDmg;
 
-	float cutOffMark;
-	float ratioOfMark;
+    public int score; // total score
+    float cutOffMark;
+    float ratioOfMark;
 
     // Use this for initialization
     void Start()
     {
+        score = 0;
         UpdateHealthbar();
 
         lpf = audioSource.GetComponent<AudioLowPassFilter>();
         lpf.cutoffFrequency = 22000;
 
-		//ie if dmg = 8 and hitpoints = 100, 0.08 percent is taken
-		ratioDmg = dmg/maxHitpoint;
+        //ie if dmg = 8 and hitpoints = 100, 0.08 percent is taken
+        ratioDmg = dmg / maxHitpoint;
     }
-
-	void FixedUpdate() {
-		/*if (hitpoints < 100) {
-
-			//1.5 multiplier
-				hitpoints += 0.02f;
-				
-		}*/
-	}
 
     public void UpdateHealthbar()
     {
@@ -78,29 +71,30 @@ public class HealthBar : MonoBehaviour
 
     private void TakeDamage()
     {
-			this.GetComponent<EmitterHit> ().toggleHit ();
-			float cutFreqAt = lpf.cutoffFrequency / 1.5f;
-			lpf.cutoffFrequency = cutFreqAt;
-			//Debug.Log ("cutoff " + lpf.cutoffFrequency);
-			hitpoints -= dmg;
-			Debug.Log ("hitpoints " + hitpoints);
-			if (hitpoints < 0)
-			{
-				hitpoints = 0;
-				//Debug.Log("You are Dead, Dead, Dead");
-				theGameManager.RestartGame();
-			}
-			UpdateHealthbar();
-
+        /*
+		this.GetComponent<EmitterHit> ().toggleHit ();
+		float cutFreqAt = lpf.cutoffFrequency / 1.5f;
+		lpf.cutoffFrequency = cutFreqAt;
+		//Debug.Log ("cutoff " + lpf.cutoffFrequency);
+		hitpoints -= dmg;
+		Debug.Log ("hitpoints " + hitpoints);
+		if (hitpoints < 0)
+		{
+			hitpoints = 0;
+			//Debug.Log("You are Dead, Dead, Dead");
+			theGameManager.RestartGame();
+		}
+		UpdateHealthbar();
+        */
     }
 
+    public void scoreIncrement()
+    {
+        score += scorePoints;
+    }
 
-    private void HealDamage(float heal)
+    private void HealDamage()
     {
 
     }
-
-    // Update is called once per frame
-    //void Update () {	
-    //}
 }
