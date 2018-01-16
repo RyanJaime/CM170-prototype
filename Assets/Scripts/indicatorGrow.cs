@@ -16,7 +16,7 @@ public class indicatorGrow : MonoBehaviour {
 
         if (Physics.Raycast(transform.position, Vector3.down, out hit, 10)) // 5
         {
-            print("Found an object - distance: " + hit.distance);
+            //print("Found an object - distance: " + hit.distance);
             transform.localScale += new Vector3(0.0028f *2, 0, 0.0028f *2); // *4
         }
         else
