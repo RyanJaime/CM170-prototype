@@ -18,30 +18,51 @@ public class movement : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.RightArrow)) {
-			if (transform.position.x < mx) {
-				transform.position = new Vector3 (transform.position.x + mx, transform.position.y, transform.position.z);
+        float moveX = Input.GetAxis("MovementX");
+        float moveY = Input.GetAxis("MovementY");
+
+
+        // > < < > 0
+
+        if (Input.GetKey (KeyCode.RightArrow) || Input.GetAxis("MovementX") > 0)
+        {
+            //if (transform.position.x < mx) {
+            if (transform.position == new Vector3(0, 0.5f, 0))
+            {
+                transform.position = new Vector3 (transform.position.x + mx, transform.position.y, transform.position.z);
 			}
 		}
-		else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
-			if (transform.position.x > -mx) {
+		else if (Input.GetKey (KeyCode.LeftArrow) || Input.GetAxis("MovementX") < 0)
+        { // (Mathf.Abs(Input.GetAxis("MovementX")) > Mathf.Abs(Input.GetAxis("MovementY")) && Input.GetAxis("MovementX") < 0)
+            //if (transform.position.x > -mx) {
+            if(transform.position == new Vector3(0, 0.5f, 0)) { 
 				transform.position = new Vector3 (transform.position.x - mx, transform.position.y, transform.position.z);
 			}
 		}
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        else if (Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("MovementY") < 0)
         {
-            if (transform.position.z < mx)
+            //if (transform.position.z < mx){
+            if (transform.position == new Vector3(0, 0.5f, 0))
             {
                 transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + mx);
             }
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("MovementY") > 0)
         {
-            if (transform.position.z > -mx)
+            //if (transform.position.z > -mx){
+            if (transform.position == new Vector3(0, 0.5f, 0))
             {
+
                 transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - mx);
             }
         }
+
+        
+        else
+        {
+            transform.position = new Vector3(0, 0.5f, 0);
+        }
+        
         /* ROAD BUMPS
         if (Physics.Raycast (transform.position, Vector3.down, out hit, 200f)) {
 			heightAboveRoad = hit.distance;

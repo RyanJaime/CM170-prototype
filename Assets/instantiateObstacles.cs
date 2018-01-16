@@ -17,7 +17,7 @@ public class instantiateObstacles : MonoBehaviour {
     private float distanceBetweenTripletBeats = 1f;
     private float distanceBetweenEigthBeats = 1f;
 
-    private float startingYPosition = -98.7f;
+    private float startingYPosition = -100.7f;
     private int maxObstacles = 64;
 
     private float startingXPosition = 98.7f;
