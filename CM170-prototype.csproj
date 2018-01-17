@@ -101,6 +101,7 @@
     <Compile Include="Assets\Scripts\Obstacles\spawner.cs" />
     <Compile Include="Assets\Scripts\Player\EmitterHit.cs" />
     <Compile Include="Assets\Scripts\Player\movement.cs" />
+    <Compile Include="Assets\Scripts\Player\Rotate.cs" />
     <Compile Include="Assets\Scripts\SceneScripts\choosingSong.cs" />
     <Compile Include="Assets\Scripts\SceneScripts\demoSong.cs" />
     <Compile Include="Assets\Scripts\SceneScripts\gameOverScreenUI.cs" />
