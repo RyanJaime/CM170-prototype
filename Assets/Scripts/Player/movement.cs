@@ -21,8 +21,8 @@ public class movement : MonoBehaviour {
 		//hit = new RaycastHit ();
 		mx = 1;
         inNeutral = true;
-        Vector3 neutralPosition = transform.position; // new Vector3(0, 0.5f, 0);
-        print(transform.position + " " + neutralPosition);
+        neutralPosition = new Vector3(0, 0.5f, 0);  // transform.position;
+        //print(transform.position + " " + neutralPosition);
 	}
 
     // Update is called once per frame

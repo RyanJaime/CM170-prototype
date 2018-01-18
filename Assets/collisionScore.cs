@@ -7,5 +7,6 @@ public class collisionScore : MonoBehaviour
     public void OnTriggerStay(Collider col)
     {
         gameObject.GetComponent<HealthBar>().scoreIncrement();
+
     }
 }
