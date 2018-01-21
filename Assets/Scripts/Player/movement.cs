@@ -11,6 +11,7 @@ public class movement : MonoBehaviour {
 
     // Rotate 
     public float speed = 15;
+    private Quaternion targetOrientation = Quaternion.identity;
     private int timesHitHorizontal = 0;
     private int timesHitVertical = 0;
     private int timesHitRolling = 0;
@@ -29,11 +30,16 @@ public class movement : MonoBehaviour {
     void Update () {
         float moveX = Input.GetAxis("MovementX");
         float moveY = Input.GetAxis("MovementY");
+        float leftTrig = Input.GetAxis("LeftTrigger");
+        float RightTrig = Input.GetAxis("RightTrigger");
+        print("moveX: " + moveX + " moveY: " + moveY + " leftTrig: " + leftTrig);
 
         if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.DownArrow) || (moveX == 0 && moveY == 0))
         {
             timesHitRolling = 0;
             timesHitVertical = 0;
+            timesHitHorizontal = 0;
+            targetOrientation = Quaternion.Euler(0, 0, 0) * targetOrientation;
             transform.position = neutralPosition;
         }
 
@@ -41,6 +47,7 @@ public class movement : MonoBehaviour {
         {
             timesHitRolling = -1;
             timesHitVertical = 0;
+            targetOrientation = Quaternion.Euler(0, -90, 0) * targetOrientation;
             changeFace(true);
             transform.position = new Vector3(mx, transform.position.y, 0);
         }
@@ -48,6 +55,7 @@ public class movement : MonoBehaviour {
         {
             timesHitRolling = 1;
             timesHitVertical = 0;
+            targetOrientation = Quaternion.Euler(0, 90, 0) * targetOrientation;
             changeFace(false);
             transform.position = new Vector3(-mx, transform.position.y, 0);
         }
@@ -55,6 +63,7 @@ public class movement : MonoBehaviour {
         {
             timesHitRolling = 0;
             timesHitVertical = 1;
+            targetOrientation = Quaternion.Euler(90, 0, 0) * targetOrientation;
             transform.position = new Vector3(0, transform.position.y, mx);
         }
         else if (Input.GetKey(KeyCode.DownArrow) || moveY > 0 && Mathf.Abs(moveY) > Mathf.Abs(moveX))
@@ -63,9 +72,25 @@ public class movement : MonoBehaviour {
             timesHitVertical = -1;
             transform.position = new Vector3(0, transform.position.y, -mx);
         }
-       
-        this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.Euler(timesHitVertical * 90, timesHitHorizontal * 90, timesHitRolling * 90), Time.deltaTime * speed);
-        
+
+        if (Input.GetKey(KeyCode.A) || leftTrig > 0)
+        {
+            timesHitHorizontal = -1;
+            targetOrientation = Quaternion.Euler(0, 0, 90) * targetOrientation;
+        }
+        else if (Input.GetKey(KeyCode.D) || RightTrig < 0)
+        {
+            timesHitHorizontal = 1;
+            targetOrientation = Quaternion.Euler(0, 0, 90) * targetOrientation;
+        }
+
+        this.transform.rotation = Quaternion.Lerp(
+             this.transform.rotation,
+             Quaternion.Euler(timesHitVertical * 90, timesHitHorizontal * 90, timesHitRolling * 90), // targetOrientation,
+             Time.deltaTime * speed);
+             //Mathf.Clamp01(Time.deltaTime * speed));
+        //this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.Euler(timesHitVertical * 90, timesHitHorizontal * 90, timesHitRolling * 90), Time.deltaTime * speed);
+
     }
 
     void changeFace(bool increase)

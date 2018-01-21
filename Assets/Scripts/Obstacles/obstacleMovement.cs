@@ -10,7 +10,13 @@ public class obstacleMovement : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
+        //MIDIparse instance = new MIDIparse();
+        //List<int[]> MIDIparseOutput = instance.getMIDIList();
+
+        //gameObject
+
+        //collisionScore.isTriggered;
 		transform.position = new Vector3 (transform.position.x, transform.position.y + 0.5f, transform.position.z);
 	}
 }
