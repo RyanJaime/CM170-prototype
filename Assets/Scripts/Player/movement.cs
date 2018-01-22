@@ -32,7 +32,7 @@ public class movement : MonoBehaviour {
         float moveY = Input.GetAxis("MovementY");
         float leftTrig = Input.GetAxis("LeftTrigger");
         float RightTrig = Input.GetAxis("RightTrigger");
-        print("moveX: " + moveX + " moveY: " + moveY + " leftTrig: " + leftTrig);
+        //print("moveX: " + moveX + " moveY: " + moveY + " leftTrig: " + leftTrig);
 
         if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.DownArrow) || (moveX == 0 && moveY == 0))
         {

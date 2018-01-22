@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class obstacleMovement : MonoBehaviour {
 
+    //public 
+        float noteSpeed = 0.4f;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -11,12 +14,8 @@ public class obstacleMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        //MIDIparse instance = new MIDIparse();
-        //List<int[]> MIDIparseOutput = instance.getMIDIList();
-
-        //gameObject
 
         //collisionScore.isTriggered;
-		transform.position = new Vector3 (transform.position.x, transform.position.y + 0.5f, transform.position.z);
+		transform.position = new Vector3 (transform.position.x, transform.position.y + noteSpeed, transform.position.z);
 	}
 }
