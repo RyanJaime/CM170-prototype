@@ -14,10 +14,10 @@ public class indicatorGrow : MonoBehaviour {
 	void FixedUpdate () {
         RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, 40)) // 5
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 10)) // 40
         {
             //print("Found an object - distance: " + hit.distance);
-            transform.localScale += new Vector3(0.0012f, 0, 0.0012f); // *4
+            transform.localScale += new Vector3(0.004f, 0, 0.004f); // *4
         }
         else
         { 
