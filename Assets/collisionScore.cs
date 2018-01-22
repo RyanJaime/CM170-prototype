@@ -22,6 +22,7 @@ public class collisionScore : MonoBehaviour
     {
         timesTriggered++;
         gameObject.GetComponent<HealthBar>().scoreIncrement();
+        /*
         //print("y scale: " + col.transform.localScale.y + " timesTriggered: " + timesTriggered);
         scaleDown = col.transform.localScale.y - 0.5f;
         if (scaleDown == 0)
@@ -33,6 +34,7 @@ public class collisionScore : MonoBehaviour
             col.transform.localScale = new Vector3(transform.localScale.x, scaleDown, transform.localScale.z);
             //col.transform.localScale = new Vector3(1, scaleDown, 1);
         }
+        */
     }
     public void OnTriggerExit(Collider col)
     {
