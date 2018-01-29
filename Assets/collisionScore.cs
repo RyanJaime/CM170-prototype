@@ -16,12 +16,14 @@ public class collisionScore : MonoBehaviour
     public void OnTriggerEnter(Collider other)
     {
         isTriggered = true;
+		gameObject.GetComponent<HealthBar> ().scoreIncrement();
+		Destroy (other.gameObject);
     }
 
     public void OnTriggerStay(Collider col)
     {
         timesTriggered++;
-        gameObject.GetComponent<HealthBar>().scoreIncrement();
+        //gameObject.GetComponent<HealthBar>().scoreIncrement();
         /*
         //print("y scale: " + col.transform.localScale.y + " timesTriggered: " + timesTriggered);
         scaleDown = col.transform.localScale.y - 0.5f;

@@ -19,7 +19,7 @@ public class indicatorGrow : MonoBehaviour {
         
 		if (indicatorArr.Count != 0) {
 			for (int i = 0; i < indicatorArr.Count; i++) {
-				indicatorArr [i].transform.localScale += new Vector3 (0.0009f, 0, 0.0009f);
+				indicatorArr [i].transform.localScale += new Vector3 (0.0018f, 0, 0.0018f);
 			}
 
 			if (indicatorArr[0].transform.localScale.x >= 0.09) {

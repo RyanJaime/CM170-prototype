@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/scenes/Deus8bitGhostSong.unity
+- path: Assets/scenes/demoScene.unity
   isLoaded: 1
   isActive: 1
